@@ -5,27 +5,33 @@ package org.simon.autoet.trackServer;
  */
 public class Result {
     private long took;
-    private long success;
     private long total;
     private long error;
     private double throughout;
     private double errorRate;
 
-    public Result(long took, long success, long total, long error, double throughout, double errorRate) {
+    public Result() {
+    }
+
+    public Result(long took, long total, long error, double throughout, double errorRate) {
         this.took = took;
-        this.success = success;
         this.total = total;
         this.error = error;
         this.throughout = throughout;
         this.errorRate = errorRate;
     }
 
-    public long getTook() {
-        return took;
+    public Result avg(Result result) {
+        this.took = result.getTook() + this.getTook();
+        this.total = result.getTotal() + this.getTotal();
+        this.error = result.getError() + this.getError();
+        this.throughout = (result.getThroughout() + this.getThroughout()) / 2;
+        this.errorRate = (result.getErrorRate() + this.getErrorRate()) / 2;
+        return this;
     }
 
-    public long getSuccess() {
-        return success;
+    public long getTook() {
+        return took;
     }
 
     public long getTotal() {
@@ -43,4 +49,6 @@ public class Result {
     public double getErrorRate() {
         return errorRate;
     }
+
+
 }

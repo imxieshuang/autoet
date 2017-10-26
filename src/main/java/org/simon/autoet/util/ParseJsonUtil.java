@@ -2,6 +2,10 @@ package org.simon.autoet.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Charsets;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.simon.autoet.trackServer.Result;
 
 /**
@@ -17,10 +21,10 @@ public class ParseJsonUtil {
 
         JSONArray items = jsonResponse.getJSONArray("items");
         int total = items.size();
-
+        //每秒入库多少document
         double throughput = total * 1000.0 / took;
         if (errors.equals("false")) {
-            return new Result(took, total, total, 0, throughput, 0);
+            return new Result(took, total, 0, throughput, 0);
         }
 
         int error = 0;
@@ -32,7 +36,22 @@ public class ParseJsonUtil {
                 error++;
             }
         }
-        return new Result(took, total - error, total, error, throughput, error / total);
+        return new Result(took, total, error, throughput, error / total);
+    }
 
+    public static Result parseQuery(String queryResponse) {
+        JSONObject jsonResponse = JSONObject.parseObject(queryResponse);
+        Long took = jsonResponse.getLong("took");
+        String timed_out = jsonResponse.getString("timed_out");
+        long error = timed_out.equals("false") ? 0 : 1;
+        // 完成一次耗时多少秒
+        double throughput = took / 1000.0;
+        return new Result(took, 1, error, throughput, error);
+    }
+
+    public static String readJsonFile(String fileName) throws IOException {
+        String json = Files.lines(Paths.get(fileName), Charsets.UTF_8)
+                .reduce((line1, line2) -> line1 + line2).get();
+        return json;
     }
 }

@@ -1,0 +1,13 @@
+{
+  "settings" : {
+    "number_of_shards" : 1
+  },
+  "mappings" : {
+    "type" : {
+      "properties" : {
+        "field1" : { "type" : "string" },
+        "field2" : { "type" : "string" }
+      }
+    }
+  }
+}
