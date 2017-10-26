@@ -13,12 +13,9 @@ public class Client {
 
     public static void main(String[] args) {
         Autoet autoet = SingleCommand.singleCommand(Autoet.class).parse(args);
-
         if (autoet.helpOption.showHelpIfRequested()) {
             return;
         }
         autoet.run();
-        System.out.println(System.getProperty("user.dir"));
-        return;
     }
 }

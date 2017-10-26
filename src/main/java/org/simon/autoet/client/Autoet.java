@@ -55,6 +55,6 @@ public class Autoet {
         CsvReport csvReport = new CsvReport();
         csvReport.wiriteCsv(resultMap, reportFile);
         LOG.info("run complete");
-        System.exit(0);
+        esServer.close();
     }
 }

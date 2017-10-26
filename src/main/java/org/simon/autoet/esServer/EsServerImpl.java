@@ -147,6 +147,15 @@ public class EsServerImpl implements EsServer {
         return false;
     }
 
+    @Override
+    public void close() {
+        try {
+            getClient().close();
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+        }
+    }
+
     public List<String> getCreateIndices() {
         return createIndices;
     }

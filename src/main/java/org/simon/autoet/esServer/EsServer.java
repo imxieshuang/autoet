@@ -21,7 +21,9 @@ public interface EsServer {
 
     public Boolean existIndex(String index);
 
-    public Boolean existType(String index,String type);
+    public Boolean existType(String index, String type);
 
     public List<String> getCreateIndices();
+
+    public void close();
 }
