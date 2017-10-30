@@ -12,7 +12,10 @@ import org.apache.commons.logging.LogFactory;
 import org.simon.autoet.util.ParseJsonUtil;
 
 /**
- * Created by Administrator on 2017/10/25.
+ * 定义本次测试
+ * @author simon
+ * @since 2017/10/28 12:45
+ * @version V1.0
  */
 public class Track {
     private String track;

@@ -3,7 +3,10 @@ package org.simon.autoet.trackServer;
 import java.util.ArrayList;
 
 /**
- * Created by Administrator on 2017/10/25.
+ * 定义挑战
+ * @author simon
+ * @since 2017/10/28 12:43
+ * @version V1.0
  */
 public class Challenge {
     private String name;

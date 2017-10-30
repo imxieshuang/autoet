@@ -9,7 +9,10 @@ import java.nio.file.Paths;
 import org.simon.autoet.trackServer.Result;
 
 /**
- * Created by Administrator on 2017/10/26.
+ * 用户解析json的工具类
+ * @author simon
+ * @since 2017/10/28 12:46
+ * @version V1.0
  */
 public class ParseJsonUtil {
 

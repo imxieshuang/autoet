@@ -5,7 +5,10 @@ import org.elasticsearch.client.RestClient;
 import org.simon.autoet.trackServer.Result;
 
 /**
- * Created by Administrator on 2017/10/25.
+ * es服务接口
+ * @author simon
+ * @since 2017/10/28 12:29
+ * @version V1.0
  */
 public interface EsServer {
     public RestClient getClient();

@@ -1,7 +1,10 @@
 package org.simon.autoet.trackServer;
 
 /**
- * Created by Administrator on 2017/10/25.
+ * 定义track数据源，用于测试
+ * @author simon
+ * @since 2017/10/28 12:44
+ * @version V1.0
  */
 public class Indice {
     private String index;

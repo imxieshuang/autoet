@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.simon.autoet.config.Config;
+import org.simon.autoet.esServer.EsServer;
 import org.simon.autoet.esServer.EsServerImpl;
 import org.simon.autoet.export.CsvReport;
 import org.simon.autoet.trackServer.Driver;
@@ -17,9 +18,11 @@ import org.simon.autoet.trackServer.Result;
 import org.simon.autoet.trackServer.Track;
 
 /**
- * Created by Administrator on 2017/10/26.
+ * 命令行定义
+ * @author simon
+ * @since 2017/10/28 12:31
+ * @version V1.0
  */
-
 @Command(name = "autoet", description = "auto test es")
 public class Autoet {
     @Inject
@@ -48,7 +51,7 @@ public class Autoet {
         }
 
         Track track = new Track(trackFile);
-        EsServerImpl esServer = new EsServerImpl(host, port);
+        EsServer esServer = new EsServerImpl(host, port);
 
         Driver driver = new Driver(track, esServer, config);
         HashMap<String, Result> resultMap = driver.run();

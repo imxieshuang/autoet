@@ -19,7 +19,10 @@ import org.simon.autoet.trackServer.Result;
 import org.simon.autoet.util.ParseJsonUtil;
 
 /**
- * Created by Administrator on 2017/10/26.
+ * es服务接口类
+ * @author simon
+ * @since 2017/10/28 12:30
+ * @version V1.0
  */
 public class EsServerImpl implements EsServer {
 

@@ -8,11 +8,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.simon.autoet.config.Config;
 import org.simon.autoet.esServer.EsServer;
+import org.simon.autoet.sourceServer.DataSource;
 import org.simon.autoet.sourceServer.FileSource;
 import org.simon.autoet.util.ParseJsonUtil;
 
 /**
- * Created by Administrator on 2017/10/26.
+ * 用于执行挑战
+ * @author simon
+ * @since 2017/10/28 12:43
+ * @version V1.0
  */
 public class Driver {
     private Track track;
@@ -33,7 +37,7 @@ public class Driver {
         String trackName = this.track.getTrack();
 
         ArrayList<Schedule> schedules = challenge.getSchedules();
-        FileSource fileSource = new FileSource(esServer);
+        DataSource fileSource = new FileSource(esServer);
 
         for (Indice indice : indices) {
             String mappingFile = config.getMappingsDir() + File.separator + indice.getMapping();

@@ -5,7 +5,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Created by Administrator on 2017/10/25.
+ * 程序运行入口类
+ * @author simon
+ * @since 2017/10/28 12:28
+ * @version V1.0
  */
 public class Client {
     private static final Log LOG = LogFactory.getLog(Client.class);

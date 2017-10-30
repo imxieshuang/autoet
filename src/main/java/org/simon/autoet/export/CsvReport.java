@@ -10,7 +10,10 @@ import org.apache.commons.logging.LogFactory;
 import org.simon.autoet.trackServer.Result;
 
 /**
- * Created by Administrator on 2017/10/25.
+ * 以csv格式输出结果
+ * @author simon
+ * @since 2017/10/28 12:34
+ * @version V1.0
  */
 public class CsvReport implements Report {
     private static final Log LOG = LogFactory.getLog(CsvReport.class);

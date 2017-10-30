@@ -1,7 +1,10 @@
 package org.simon.autoet.trackServer;
 
 /**
- * Created by Administrator on 2017/10/25.
+ * 测试操作项
+ * @author simon
+ * @since 2017/10/28 12:44
+ * @version V1.0
  */
 public class Operation {
     private String name;

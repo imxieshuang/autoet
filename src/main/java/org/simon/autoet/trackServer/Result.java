@@ -1,9 +1,14 @@
 package org.simon.autoet.trackServer;
 
 /**
- * Created by Administrator on 2017/10/26.
+
+ * 测试结果实体类
+ * @author simon
+ * @since 2017/10/28 12:27
+ * @version V1.0
  */
 public class Result {
+
     private long took;
     private long total;
     private long error;
