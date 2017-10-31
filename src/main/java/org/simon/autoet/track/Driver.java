@@ -96,13 +96,13 @@ public class Driver {
             try {
                 mapping = ParseJsonUtils.readJsonFile(mappingFile);
             } catch (IOException e) {
-                throw new RuntimeException("parse mapping failed", e);
+                throw new AutoRuntimeException("parse mapping failed", e);
             }
 
             if (esServer.createIndex(indice.getIndex(), mapping)) {
                 fileSource.insertEs(indice.getIndex(), indice.getType(), 2000, documentFile);
             } else {
-                throw new RuntimeException("create index failed: " + indice.getIndex());
+                throw new AutoRuntimeException("create index failed: " + indice.getIndex());
             }
         }
     }
