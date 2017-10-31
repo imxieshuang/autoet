@@ -47,7 +47,7 @@ public class FileUtil {
                     readFile(file, writer);
                 } else {
                     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                        String line = "";
+                        String line;
                         while ((line = reader.readLine()) != null) {
                             writer.append(line);
                             writer.newLine();

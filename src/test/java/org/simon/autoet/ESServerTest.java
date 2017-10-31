@@ -2,7 +2,7 @@ package org.simon.autoet;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.simon.autoet.esServer.EsServerImpl;
+import org.simon.autoet.elasticsearch.EsServerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,8 @@ public class ESServerTest {
                 "        }\n" +
                 "    }\n" +
                 "}";
-        server.createIndex("createtest",jsonString);
+        Boolean createtest = server.createIndex("createtest", jsonString);
+        LOGGER.error(createtest.toString());
 
     }
 

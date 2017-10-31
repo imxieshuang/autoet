@@ -1,4 +1,4 @@
-package org.simon.autoet.esServer;
+package org.simon.autoet.elasticsearch;
 
 import com.alibaba.fastjson.JSONObject;
 import java.io.IOException;
@@ -50,11 +50,10 @@ public class EsServerImpl implements EsServer {
 
     @Override
     public Result indexBulk(String source) {
-        RestClient client = getClient();
         HttpEntity entity = new NStringEntity(source, ContentType.APPLICATION_JSON);
         Map<String, String> params = Collections.emptyMap();
         try {
-            Response response = client.performRequest("POST", "/_bulk", params, entity);
+            Response response = getClient().performRequest("POST", "/_bulk", params, entity);
             String responseStr = EntityUtils.toString(response.getEntity());
 
             return ParseJsonUtils.parseIndex(responseStr);
@@ -66,17 +65,16 @@ public class EsServerImpl implements EsServer {
 
     @Override
     public Result query(String index, String type, String query) {
-        RestClient client = getClient();
         Map<String, String> params = Collections.emptyMap();
         HttpEntity entity = new NStringEntity(query, ContentType.APPLICATION_JSON);
         String endpoint = "/" + index + "/" + type + "/_search";
         try {
-            Response response = client.performRequest("GET", endpoint, params, entity);
+            Response response = getClient().performRequest("GET", endpoint, params, entity);
             String responseStr = EntityUtils.toString(response.getEntity());
 
             return ParseJsonUtils.parseQuery(responseStr);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("query index failed", e);
         }
         return null;
     }
@@ -84,11 +82,10 @@ public class EsServerImpl implements EsServer {
     @Override
     public Boolean createIndex(String index, String mapping) {
         if (!existIndex(index)) {
-            RestClient client = getClient();
             Map<String, String> params = Collections.emptyMap();
             HttpEntity entity = new NStringEntity(mapping, ContentType.APPLICATION_JSON);
             try {
-                Response response = client.performRequest("PUT", "/" + index, params, entity);
+                Response response = getClient().performRequest("PUT", "/" + index, params, entity);
                 String responseStr = EntityUtils.toString(response.getEntity());
                 JSONObject jsonResponse = JSONObject.parseObject(responseStr);
                 String acknowledged = jsonResponse.getString("acknowledged");
@@ -98,19 +95,18 @@ public class EsServerImpl implements EsServer {
                 }
                 return Boolean.valueOf(acknowledged);
             } catch (IOException e) {
-                LOGGER.error("create index fail: " + index, e);
+                LOGGER.error("create index failed: " + index, e);
                 return false;
             }
         }
-        LOGGER.info("index exit: " + index);
+        LOGGER.info("index exist: " + index);
         return true;
     }
 
     @Override
     public Boolean deleteIndex(String index) {
-        RestClient client = getClient();
         try {
-            Response response = client.performRequest("DELETE", "/" + index);
+            Response response = getClient().performRequest("DELETE", "/" + index);
             String responseStr = EntityUtils.toString(response.getEntity());
 
             JSONObject jsonResponse = JSONObject.parseObject(responseStr);
@@ -118,35 +114,33 @@ public class EsServerImpl implements EsServer {
             LOGGER.info("delete " + index + " success");
             return Boolean.valueOf(acknowledged);
         } catch (IOException e) {
-            LOGGER.error("create index fail: " + index, e);
+            LOGGER.error("delete index failed: " + index, e);
         }
         return false;
     }
 
     @Override
     public Boolean existIndex(String index) {
-        RestClient client = getClient();
         try {
-            Response response = client.performRequest("HEAD", "/" + index);
+            Response response = getClient().performRequest("HEAD", "/" + index);
 
             int statusCode = response.getStatusLine().getStatusCode();
             return statusCode == 200;
         } catch (IOException e) {
-            LOGGER.error("create index fail: " + index, e);
+            LOGGER.error("exist index failed: " + index, e);
         }
         return false;
     }
 
     @Override
     public Boolean existType(String index, String type) {
-        RestClient client = getClient();
         try {
-            Response response = client.performRequest("HEAD", "/index/_mapping/" + type);
+            Response response = getClient().performRequest("HEAD", "/index/_mapping/" + type);
 
             int statusCode = response.getStatusLine().getStatusCode();
             return statusCode == 200;
         } catch (IOException e) {
-            LOGGER.error("create index fail: " + index, e);
+            LOGGER.error("exist type failed: " + index, e);
         }
         return false;
     }

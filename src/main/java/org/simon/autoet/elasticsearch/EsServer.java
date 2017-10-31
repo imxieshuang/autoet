@@ -1,4 +1,4 @@
-package org.simon.autoet.esServer;
+package org.simon.autoet.elasticsearch;
 
 import java.util.List;
 import org.elasticsearch.client.RestClient;

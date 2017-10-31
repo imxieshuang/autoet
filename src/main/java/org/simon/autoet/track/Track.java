@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.simon.autoet.exception.AutoRuntimeException;
 import org.simon.autoet.util.ParseJsonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 定义本次测试
@@ -25,8 +24,6 @@ public class Track {
     private Challenge challenge;
     private Map<String, Operation> operationMap;
     private List<Indice> indices;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Track.class);
-
 
     public Track(String fileName) {
         loadTrack(fileName);
@@ -37,7 +34,7 @@ public class Track {
         try {
             this.trackStr = ParseJsonUtils.readJsonFile(fileName);
         } catch (IOException e) {
-            throw new RuntimeException("parse track file failed: " + fileName, e);
+            throw new AutoRuntimeException("parse track file failed: " + fileName, e);
         }
 
         JSONObject jsonTrack = JSON.parseObject(this.trackStr);

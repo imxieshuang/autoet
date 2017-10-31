@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import org.apache.commons.compress.compressors.bzip2.BZip2Utils;
-import org.simon.autoet.esServer.EsServer;
+import org.simon.autoet.elasticsearch.EsServer;
 import org.simon.autoet.track.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,6 @@ public class FileSource implements DataSource {
             }
             result.avg(esServer.indexBulk(source.toString()));
             LOGGER.info("insert elasticsearch document count: " + increaseBulk);
-            source = new StringBuilder();
         } catch (Exception e) {
             LOGGER.error("insert document failed", e);
         }

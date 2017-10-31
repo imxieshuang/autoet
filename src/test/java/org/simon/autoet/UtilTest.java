@@ -11,6 +11,5 @@ public class UtilTest {
     @Test
     public void readJson() throws IOException {
         String s = ParseJsonUtils.readJsonFile("D:\\input\\track.json");
-        System.out.println(s);
     }
 }

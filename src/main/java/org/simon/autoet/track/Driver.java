@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.simon.autoet.config.Config;
-import org.simon.autoet.esServer.EsServer;
+import org.simon.autoet.elasticsearch.EsServer;
+import org.simon.autoet.exception.AutoRuntimeException;
 import org.simon.autoet.source.DataSource;
 import org.simon.autoet.source.FileSource;
 import org.simon.autoet.util.ParseJsonUtils;
@@ -55,14 +56,14 @@ public class Driver {
         Map<String, Result> resultMap = new HashMap<>();
         for (Schedule schedule : schedules) {
             Operation operation = operationMap.get(schedule.getOperation());
-            if ("search".equals(operation.getOperationType())) {
+            if (OperationType.SEARCH.equals(operation.getOperationType())) {
                 Result result = esServer.query(operation.getIndex(), operation.getType(), operation.getBody());
                 for (int i = 0; i < schedule.getIterations() - 1; i++) {
                     result.avg(esServer.query(operation.getIndex(), operation.getType(), operation.getBody()));
                 }
                 LOGGER.info("operation complete " + operation.getName());
                 resultMap.put(operation.getName(), result);
-            } else if ("index".equals(operation.getOperationType())) {
+            } else if (OperationType.INDEX.equals(operation.getOperationType())) {
                 String mappingFile = config.getMappingsDir() + File.separator + operation.getMapping();
                 String documentFile = config.getDataDir() + File.separator + operation.getDocuments();
 
@@ -70,7 +71,7 @@ public class Driver {
                 try {
                     mapping = ParseJsonUtils.readJsonFile(mappingFile);
                 } catch (IOException e) {
-                    throw new RuntimeException("parse mapping failed", e);
+                    throw new AutoRuntimeException("parse mapping failed", e);
                 }
 
                 if (esServer.createIndex(operation.getIndex(), mapping)) {
@@ -78,7 +79,7 @@ public class Driver {
                             operation.getType(), operation.getBulkSize(), documentFile);
                     resultMap.put(operation.getName(), result);
                 } else {
-                    throw new RuntimeException("create index failed: " + operation.getIndex());
+                    throw new AutoRuntimeException("create index failed: " + operation.getIndex());
                 }
                 LOGGER.info("operation complete " + operation.getName());
 

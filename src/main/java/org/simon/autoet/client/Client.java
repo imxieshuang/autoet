@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 public class Client {
     private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
+    private Client() {
+    }
+
     public static void main(String[] args) {
         Autoet autoet = null;
         try {
