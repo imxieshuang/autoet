@@ -59,7 +59,7 @@ public class EsServerImpl implements EsServer {
 
             return ParseJsonUtils.parseIndex(responseStr);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("index document failed", e);
         }
         return null;
     }
@@ -96,14 +96,14 @@ public class EsServerImpl implements EsServer {
                     createIndices.add(index);
                     LOGGER.info("create " + index + " success");
                 }
-
                 return Boolean.valueOf(acknowledged);
             } catch (IOException e) {
-                LOGGER.error("create index fail: " + index + ", result " + e.getMessage());
+                LOGGER.error("create index fail: " + index, e);
+                return false;
             }
         }
-        LOGGER.error("index exit: " + index);
-        return false;
+        LOGGER.info("index exit: " + index);
+        return true;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class EsServerImpl implements EsServer {
             LOGGER.info("delete " + index + " success");
             return Boolean.valueOf(acknowledged);
         } catch (IOException e) {
-            LOGGER.error("create index fail: " + index + ", result: " + e.getMessage());
+            LOGGER.error("create index fail: " + index, e);
         }
         return false;
     }
@@ -132,7 +132,7 @@ public class EsServerImpl implements EsServer {
             int statusCode = response.getStatusLine().getStatusCode();
             return statusCode == 200;
         } catch (IOException e) {
-            LOGGER.error("create index fail: " + index + ", result: " + e.getMessage());
+            LOGGER.error("create index fail: " + index, e);
         }
         return false;
     }
@@ -146,7 +146,7 @@ public class EsServerImpl implements EsServer {
             int statusCode = response.getStatusLine().getStatusCode();
             return statusCode == 200;
         } catch (IOException e) {
-            LOGGER.error("create index fail: " + index + ", result: " + e.getMessage());
+            LOGGER.error("create index fail: " + index, e);
         }
         return false;
     }
@@ -156,7 +156,7 @@ public class EsServerImpl implements EsServer {
         try {
             getClient().close();
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("close elasticsearch client failed", e);
         }
     }
 

@@ -1,13 +1,12 @@
 package org.simon.autoet.track;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.simon.autoet.config.Config;
 import org.simon.autoet.esServer.EsServer;
-import org.simon.autoet.esServer.EsServerImpl;
 import org.simon.autoet.source.DataSource;
 import org.simon.autoet.source.FileSource;
 import org.simon.autoet.util.ParseJsonUtils;
@@ -16,15 +15,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 用于执行挑战
+ *
  * @author simon
- * @since 2017/10/28 12:43
  * @version V1.0
+ * @since 2017/10/28 12:43
  */
 public class Driver {
     private Track track;
     private EsServer esServer;
     private Config config;
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Driver.class);
 
 
     public Driver(Track track, EsServer esServer, Config config) {
@@ -39,7 +39,7 @@ public class Driver {
         Map<String, Operation> operationMap = this.track.getOperationMap();
         String trackName = this.track.getTrackStr();
 
-        ArrayList<Schedule> schedules = challenge.getSchedules();
+        List<Schedule> schedules = challenge.getSchedules();
         DataSource fileSource = new FileSource(esServer);
 
         runIndices(indices, fileSource);
@@ -65,18 +65,23 @@ public class Driver {
             } else if ("index".equals(operation.getOperationType())) {
                 String mappingFile = config.getMappingsDir() + File.separator + operation.getMapping();
                 String documentFile = config.getDataDir() + File.separator + operation.getDocuments();
+
+                String mapping = null;
                 try {
-                    String mapping = ParseJsonUtils.readJsonFile(mappingFile);
+                    mapping = ParseJsonUtils.readJsonFile(mappingFile);
+                } catch (IOException e) {
+                    throw new RuntimeException("parse mapping failed", e);
+                }
 
-                    esServer.createIndex(operation.getIndex(), mapping);
-
+                if (esServer.createIndex(operation.getIndex(), mapping)) {
                     Result result = fileSource.insertEs(operation.getIndex(),
                             operation.getType(), operation.getBulkSize(), documentFile);
                     resultMap.put(operation.getName(), result);
-                    LOGGER.info("operation complete " + operation.getName());
-                } catch (Exception e) {
-                    LOGGER.error(e.getMessage());
+                } else {
+                    throw new RuntimeException("create index failed: " + operation.getIndex());
                 }
+                LOGGER.info("operation complete " + operation.getName());
+
             }
         }
         return resultMap;
@@ -86,14 +91,17 @@ public class Driver {
         for (Indice indice : indices) {
             String mappingFile = config.getMappingsDir() + File.separator + indice.getMapping();
             String documentFile = config.getDataDir() + File.separator + indice.getDocuments();
+            String mapping = null;
             try {
-                String mapping = ParseJsonUtils.readJsonFile(mappingFile);
-                Boolean indexBoolean = esServer.createIndex(indice.getIndex(), mapping);
-                if (indexBoolean) {
-                    fileSource.insertEs(indice.getIndex(), indice.getType(), 2000, documentFile);
-                }
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
+                mapping = ParseJsonUtils.readJsonFile(mappingFile);
+            } catch (IOException e) {
+                throw new RuntimeException("parse mapping failed", e);
+            }
+
+            if (esServer.createIndex(indice.getIndex(), mapping)) {
+                fileSource.insertEs(indice.getIndex(), indice.getType(), 2000, documentFile);
+            } else {
+                throw new RuntimeException("create index failed: " + indice.getIndex());
             }
         }
     }

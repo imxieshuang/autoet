@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
-import org.simon.autoet.esServer.EsServerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +26,14 @@ public class Config {
     private String mappingsDir;
     private String trackFile;
     private String reportFile;
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
 
 
     public Config() {
         Properties properties = new Properties();
         String userDir = System.getProperty("user.dir");
         String configFile = userDir + File.separator + "config" + File.separator + "auto_config.properties";
-        InputStream inputStream = null;
-        try {
-            inputStream = Files.newInputStream(Paths.get(configFile));
+        try (InputStream inputStream = Files.newInputStream(Paths.get(configFile))) {
             properties.load(inputStream);
             this.dataDir = userDir + File.separator + properties.getProperty("auto.data");
             this.logDir = userDir + File.separator + properties.getProperty("auto.log");
@@ -45,15 +42,7 @@ public class Config {
             this.trackFile = userDir + File.separator + this.tracksDir + File.separator + "track.json";
             this.reportFile = userDir + File.separator + "report.csv";
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("load properties failed", e);
         }
     }
 

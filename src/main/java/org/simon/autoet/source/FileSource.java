@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import org.apache.commons.compress.compressors.bzip2.BZip2Utils;
 import org.simon.autoet.esServer.EsServer;
-import org.simon.autoet.esServer.EsServerImpl;
 import org.simon.autoet.track.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FileSource implements DataSource {
     private EsServer esServer;
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileSource.class);
 
     public FileSource(EsServer esServer) {
         this.esServer = esServer;
@@ -30,7 +29,7 @@ public class FileSource implements DataSource {
         return new BufferedReader(new FileReader(new File(fileName)));
     }
 
-    private BufferedReader readBzip2File(String fileName) throws Exception {
+    private BufferedReader readBzip2File(String fileName) throws IOException {
         boolean compressedFilename = BZip2Utils.isCompressedFilename(fileName);
         if (compressedFilename) {
             String uncompressedFileName = BZip2Utils.getUncompressedFilename(fileName);
@@ -41,10 +40,8 @@ public class FileSource implements DataSource {
 
     @Override
     public Result insertEs(String index, String type, final int bulkSize, String fileName) {
-        BufferedReader reader = null;
         Result result = new Result();
-        try {
-            reader = readBzip2File(fileName);
+        try (BufferedReader reader = readBzip2File(fileName)) {
             String head = "{\"index\":{\"_index\":\"" + index + "\",\"_type\":\"" + type + "\"}}\n";
 
             String line;
@@ -61,20 +58,11 @@ public class FileSource implements DataSource {
                     LOGGER.info("insert elasticsearch document count: " + increaseBulk);
                 }
             }
-
             result.avg(esServer.indexBulk(source.toString()));
             LOGGER.info("insert elasticsearch document count: " + increaseBulk);
             source = new StringBuilder();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("insert document failed", e);
         }
         return result;
 

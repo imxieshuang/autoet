@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
-import org.simon.autoet.esServer.EsServerImpl;
 import org.simon.autoet.track.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * @since 2017/10/28 12:34
  */
 public class CsvReport implements Report {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsvReport.class);
 
     public void wiriteCsv(Map<String, Result> resultMap, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
@@ -33,7 +32,7 @@ public class CsvReport implements Report {
                 writer.append(lines);
             }
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("write csv report failed", e);
         }
     }
 }

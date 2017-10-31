@@ -9,23 +9,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.simon.autoet.esServer.EsServerImpl;
 import org.simon.autoet.util.ParseJsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 定义本次测试
+ *
  * @author simon
- * @since 2017/10/28 12:45
  * @version V1.0
+ * @since 2017/10/28 12:45
  */
 public class Track {
     private String trackStr;
     private Challenge challenge;
     private Map<String, Operation> operationMap;
     private List<Indice> indices;
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Track.class);
 
 
     public Track(String fileName) {
@@ -33,23 +33,25 @@ public class Track {
     }
 
     private void loadTrack(String fileName) {
+
         try {
             this.trackStr = ParseJsonUtils.readJsonFile(fileName);
-
-            JSONObject jsonTrack = JSON.parseObject(this.trackStr);
-
-            JSONArray indicesArray = jsonTrack.getJSONArray("indices");
-            parseIndice(indicesArray);
-
-            JSONArray operationsArray = jsonTrack.getJSONArray("operations");
-            parseOperations(operationsArray);
-
-            JSONObject challengeObj = jsonTrack.getJSONObject("challenge");
-            parseChallenges(challengeObj);
-
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            throw new RuntimeException("parse track file failed: " + fileName, e);
         }
+
+        JSONObject jsonTrack = JSON.parseObject(this.trackStr);
+
+        JSONArray indicesArray = jsonTrack.getJSONArray("indices");
+        parseIndice(indicesArray);
+
+        JSONArray operationsArray = jsonTrack.getJSONArray("operations");
+        parseOperations(operationsArray);
+
+        JSONObject challengeObj = jsonTrack.getJSONObject("challenge");
+        parseChallenges(challengeObj);
+
+
     }
 
     private void parseIndice(JSONArray indicesArray) {
@@ -92,7 +94,7 @@ public class Track {
         JSONArray scheduleArray = jsonChallenges.getJSONArray("schedule");
 
         ArrayList<Schedule> schedules = new ArrayList<>();
-        this.challenge = new Challenge(name,schedules);
+        this.challenge = new Challenge(name, schedules);
 
         for (Object scheduleObj : scheduleArray) {
             JSONObject jsonSchedule = (JSONObject) scheduleObj;
