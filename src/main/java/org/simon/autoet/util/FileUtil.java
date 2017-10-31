@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * TODO
+ * 文件合并测试
  *
  * @author simon
  * @version V1.0

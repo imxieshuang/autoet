@@ -1,3 +1,5 @@
+package org.simon.autoet;
+
 import java.io.IOException;
 import org.junit.Test;
 import org.simon.autoet.util.ParseJsonUtil;

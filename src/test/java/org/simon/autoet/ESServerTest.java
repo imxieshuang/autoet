@@ -1,3 +1,5 @@
+package org.simon.autoet;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.simon.autoet.esServer.EsServerImpl;
