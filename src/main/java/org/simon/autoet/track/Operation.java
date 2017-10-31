@@ -1,4 +1,4 @@
-package org.simon.autoet.trackServer;
+package org.simon.autoet.track;
 
 /**
  * 测试操作项

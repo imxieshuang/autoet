@@ -7,7 +7,4 @@ package org.simon.autoet.config;
  * @version V1.0
  */
 public class SimpleConfig extends Config {
-    public void config(){
-
-    }
 }

@@ -7,15 +7,15 @@ import io.airlift.airline.Option;
 import java.io.File;
 import java.util.HashMap;
 import javax.inject.Inject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.simon.autoet.config.Config;
 import org.simon.autoet.esServer.EsServer;
 import org.simon.autoet.esServer.EsServerImpl;
 import org.simon.autoet.export.CsvReport;
-import org.simon.autoet.trackServer.Driver;
-import org.simon.autoet.trackServer.Result;
-import org.simon.autoet.trackServer.Track;
+import org.simon.autoet.track.Driver;
+import org.simon.autoet.track.Result;
+import org.simon.autoet.track.Track;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 命令行定义
@@ -41,7 +41,7 @@ public class Autoet {
     @Option(name = {"--track-file"}, description = "report file")
     public String trackFile;
 
-    private static final Log LOG = LogFactory.getLog(Autoet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
 
     public void run() {
         Config config = new Config();
@@ -60,7 +60,7 @@ public class Autoet {
         HashMap<String, Result> resultMap = driver.run();
         CsvReport csvReport = new CsvReport();
         csvReport.wiriteCsv(resultMap, reportFile);
-        LOG.info("run complete");
+        LOGGER.info("run complete");
         esServer.close();
     }
 

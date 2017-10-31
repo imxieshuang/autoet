@@ -1,4 +1,4 @@
-package org.simon.autoet.trackServer;
+package org.simon.autoet.track;
 
 /**
  * 测试结果实体类
@@ -16,6 +16,7 @@ public class Result {
     private double errorRate;
 
     public Result() {
+        //    需要默认构造函数
     }
 
     public Result(long took, long total, long error, double throughout, double errorRate) {

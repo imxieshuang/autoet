@@ -1,8 +1,9 @@
 package org.simon.autoet.client;
 
 import io.airlift.airline.SingleCommand;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.simon.autoet.esServer.EsServerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 程序运行入口类
@@ -12,8 +13,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 2017/10/28 12:28
  */
 public class Client {
-    private static final Log LOG = LogFactory.getLog(Client.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
 
     public static void main(String[] args) {
         try {
@@ -24,7 +24,7 @@ public class Client {
             autoet.run();
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            LOG.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 }

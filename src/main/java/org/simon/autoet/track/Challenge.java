@@ -1,6 +1,6 @@
-package org.simon.autoet.trackServer;
+package org.simon.autoet.track;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 定义挑战
@@ -10,9 +10,9 @@ import java.util.ArrayList;
  */
 public class Challenge {
     private String name;
-    private ArrayList<Schedule> schedules;
+    private List<Schedule> schedules;
 
-    public Challenge(String name, ArrayList<Schedule> schedules) {
+    public Challenge(String name, List<Schedule> schedules) {
         this.name = name;
 
         this.schedules = schedules;
@@ -22,7 +22,7 @@ public class Challenge {
         return name;
     }
 
-    public ArrayList<Schedule> getSchedules() {
+    public List<Schedule> getSchedules() {
         return schedules;
     }
 }

@@ -1,4 +1,4 @@
-package org.simon.autoet.trackServer;
+package org.simon.autoet.track;
 
 /**
  * 定义track数据源，用于测试

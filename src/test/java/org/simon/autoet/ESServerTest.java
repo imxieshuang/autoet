@@ -3,12 +3,15 @@ package org.simon.autoet;
 import org.junit.Before;
 import org.junit.Test;
 import org.simon.autoet.esServer.EsServerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Administrator on 2017/10/26.
  */
 public class ESServerTest {
     private EsServerImpl server;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
 
     @Before
     public void clientTest(){
@@ -49,17 +52,17 @@ public class ESServerTest {
                 "        }\n" +
                 "    }\n" +
                 "}";
+        server.createIndex("createtest",jsonString);
 
-        System.out.println(server.createIndex("createtest",jsonString));
     }
 
     @Test
     public void deleteIndex(){
-        System.out.println(server.deleteIndex("createtest"));
+        server.deleteIndex("createtest");
     }
 
     @Test
     public void existIndex(){
-        System.out.println(server.existIndex("test2"));
+        server.existIndex("test2");
     }
 }

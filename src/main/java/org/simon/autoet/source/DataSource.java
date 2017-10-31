@@ -1,6 +1,6 @@
-package org.simon.autoet.sourceServer;
+package org.simon.autoet.source;
 
-import org.simon.autoet.trackServer.Result;
+import org.simon.autoet.track.Result;
 
 /**
  * 数据源接口

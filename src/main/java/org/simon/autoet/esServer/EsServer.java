@@ -2,7 +2,7 @@ package org.simon.autoet.esServer;
 
 import java.util.List;
 import org.elasticsearch.client.RestClient;
-import org.simon.autoet.trackServer.Result;
+import org.simon.autoet.track.Result;
 
 /**
  * es服务接口

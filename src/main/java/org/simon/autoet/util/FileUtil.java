@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import org.simon.autoet.esServer.EsServerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 文件合并测试
@@ -15,9 +18,14 @@ import java.io.IOException;
  * @since 2017/10/31 11:57
  */
 public class FileUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+
+    private FileUtil() {
+    }
+
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.out.println("参数不够");
+            LOGGER.error("参数不够");
             System.exit(1);
         }
 
@@ -35,7 +43,7 @@ public class FileUtil {
                     try {
                         writer.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOGGER.error(e.getMessage());
                     }
                 }
             }
@@ -50,8 +58,10 @@ public class FileUtil {
                     readFile(file, writer);
                 } else {
                     BufferedReader reader = null;
+                    FileReader in = null;
                     try {
-                        reader = new BufferedReader(new FileReader(file));
+                        in = new FileReader(file);
+                        reader = new BufferedReader(in);
 
                         String line = "";
                         while ((line = reader.readLine()) != null) {
@@ -65,7 +75,14 @@ public class FileUtil {
                             try {
                                 reader.close();
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                LOGGER.error(e.getMessage());
+                            }
+                        }
+                        if (in != null) {
+                            try {
+                                in.close();
+                            } catch (IOException e) {
+                                LOGGER.error(e.getMessage());
                             }
                         }
                     }

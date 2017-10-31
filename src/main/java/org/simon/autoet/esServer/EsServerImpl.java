@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
@@ -15,14 +13,17 @@ import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
-import org.simon.autoet.trackServer.Result;
-import org.simon.autoet.util.ParseJsonUtil;
+import org.simon.autoet.track.Result;
+import org.simon.autoet.util.ParseJsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * es服务接口类
+ *
  * @author simon
- * @since 2017/10/28 12:30
  * @version V1.0
+ * @since 2017/10/28 12:30
  */
 public class EsServerImpl implements EsServer {
 
@@ -30,7 +31,7 @@ public class EsServerImpl implements EsServer {
     private int port;
     private RestClient client;
     private List<String> createIndices = new ArrayList<>();
-    private static final Log LOG = LogFactory.getLog(EsServerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
 
     public EsServerImpl(String hostName, int port) {
         this.hostName = hostName;
@@ -56,11 +57,9 @@ public class EsServerImpl implements EsServer {
             Response response = client.performRequest("POST", "/_bulk", params, entity);
             String responseStr = EntityUtils.toString(response.getEntity());
 
-            Result result = ParseJsonUtil.parseIndex(responseStr);
-
-            return result;
+            return ParseJsonUtils.parseIndex(responseStr);
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return null;
     }
@@ -74,34 +73,36 @@ public class EsServerImpl implements EsServer {
         try {
             Response response = client.performRequest("GET", endpoint, params, entity);
             String responseStr = EntityUtils.toString(response.getEntity());
-            Result result = ParseJsonUtil.parseQuery(responseStr);
-            LOG.info("query complete");
-            return result;
+
+            return ParseJsonUtils.parseQuery(responseStr);
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return null;
     }
 
     @Override
     public Boolean createIndex(String index, String mapping) {
-        RestClient client = getClient();
-        Map<String, String> params = Collections.emptyMap();
-        HttpEntity entity = new NStringEntity(mapping, ContentType.APPLICATION_JSON);
-        try {
-            Response response = client.performRequest("PUT", "/" + index, params, entity);
-            String responseStr = EntityUtils.toString(response.getEntity());
-            JSONObject jsonResponse = JSONObject.parseObject(responseStr);
-            String acknowledged = jsonResponse.getString("acknowledged");
-            if (acknowledged.equals("true")) {
-                createIndices.add(index);
-                LOG.info("create " + index + " success");
-            }
+        if (!existIndex(index)) {
+            RestClient client = getClient();
+            Map<String, String> params = Collections.emptyMap();
+            HttpEntity entity = new NStringEntity(mapping, ContentType.APPLICATION_JSON);
+            try {
+                Response response = client.performRequest("PUT", "/" + index, params, entity);
+                String responseStr = EntityUtils.toString(response.getEntity());
+                JSONObject jsonResponse = JSONObject.parseObject(responseStr);
+                String acknowledged = jsonResponse.getString("acknowledged");
+                if ("true".equals(acknowledged)) {
+                    createIndices.add(index);
+                    LOGGER.info("create " + index + " success");
+                }
 
-            return Boolean.valueOf(acknowledged);
-        } catch (IOException e) {
-            LOG.error("create index fail: " + index + ", result " + e.getMessage());
+                return Boolean.valueOf(acknowledged);
+            } catch (IOException e) {
+                LOGGER.error("create index fail: " + index + ", result " + e.getMessage());
+            }
         }
+        LOGGER.error("index exit: " + index);
         return false;
     }
 
@@ -114,10 +115,10 @@ public class EsServerImpl implements EsServer {
 
             JSONObject jsonResponse = JSONObject.parseObject(responseStr);
             String acknowledged = jsonResponse.getString("acknowledged");
-            LOG.info("delete " + index + " success");
+            LOGGER.info("delete " + index + " success");
             return Boolean.valueOf(acknowledged);
         } catch (IOException e) {
-            LOG.error("create index fail: " + index + ", result: " + e.getMessage());
+            LOGGER.error("create index fail: " + index + ", result: " + e.getMessage());
         }
         return false;
     }
@@ -131,7 +132,7 @@ public class EsServerImpl implements EsServer {
             int statusCode = response.getStatusLine().getStatusCode();
             return statusCode == 200;
         } catch (IOException e) {
-            LOG.error("create index fail: " + index + ", result: " + e.getMessage());
+            LOGGER.error("create index fail: " + index + ", result: " + e.getMessage());
         }
         return false;
     }
@@ -145,7 +146,7 @@ public class EsServerImpl implements EsServer {
             int statusCode = response.getStatusLine().getStatusCode();
             return statusCode == 200;
         } catch (IOException e) {
-            LOG.error("create index fail: " + index + ", result: " + e.getMessage());
+            LOGGER.error("create index fail: " + index + ", result: " + e.getMessage());
         }
         return false;
     }
@@ -155,7 +156,7 @@ public class EsServerImpl implements EsServer {
         try {
             getClient().close();
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 

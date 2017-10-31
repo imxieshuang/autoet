@@ -3,25 +3,24 @@ package org.simon.autoet.export;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.simon.autoet.trackServer.Result;
+import org.simon.autoet.esServer.EsServerImpl;
+import org.simon.autoet.track.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 以csv格式输出结果
+ *
  * @author simon
- * @since 2017/10/28 12:34
  * @version V1.0
+ * @since 2017/10/28 12:34
  */
 public class CsvReport implements Report {
-    private static final Log LOG = LogFactory.getLog(CsvReport.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
 
-    public void wiriteCsv(HashMap<String, Result> resultMap, String fileName) {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(fileName));
+    public void wiriteCsv(Map<String, Result> resultMap, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Map.Entry<String, Result> resultEntry : resultMap.entrySet()) {
                 String operationName = resultEntry.getKey();
                 Result result = resultEntry.getValue();
@@ -34,17 +33,7 @@ public class CsvReport implements Report {
                 writer.append(lines);
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage());
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    LOG.error(e.getMessage());
-                }
-            }
+            LOGGER.error(e.getMessage());
         }
-
-
     }
 }

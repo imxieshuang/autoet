@@ -6,8 +6,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.simon.autoet.esServer.EsServerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 配置类
@@ -26,7 +27,8 @@ public class Config {
     private String mappingsDir;
     private String trackFile;
     private String reportFile;
-    private static final Log LOG = LogFactory.getLog(Config.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+
 
     public Config() {
         Properties properties = new Properties();
@@ -43,13 +45,13 @@ public class Config {
             this.trackFile = userDir + File.separator + this.tracksDir + File.separator + "track.json";
             this.reportFile = userDir + File.separator + "report.csv";
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    LOG.error(e.getMessage());
+                    LOGGER.error(e.getMessage());
                 }
             }
         }
@@ -71,15 +73,11 @@ public class Config {
         return dataDir;
     }
 
-    public String getLogDir() {
-        return logDir;
-    }
-
     public String getTracksDir() {
         return tracksDir;
     }
 
-    public static Log getLOG() {
-        return LOG;
+    public String getLogDir() {
+        return logDir;
     }
 }
