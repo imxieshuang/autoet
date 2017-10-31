@@ -5,7 +5,7 @@ import io.airlift.airline.Command;
 import io.airlift.airline.HelpOption;
 import io.airlift.airline.Option;
 import java.io.File;
-import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import org.simon.autoet.config.Config;
 import org.simon.autoet.esServer.EsServer;
@@ -57,7 +57,7 @@ public class Autoet {
         EsServer esServer = new EsServerImpl(host, port);
 
         Driver driver = new Driver(track, esServer, config);
-        HashMap<String, Result> resultMap = driver.run();
+        Map<String, Result> resultMap = driver.run();
         CsvReport csvReport = new CsvReport();
         csvReport.wiriteCsv(resultMap, reportFile);
         LOGGER.info("run complete");
