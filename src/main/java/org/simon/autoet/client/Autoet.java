@@ -19,16 +19,17 @@ import org.simon.autoet.trackServer.Track;
 
 /**
  * 命令行定义
+ *
  * @author simon
- * @since 2017/10/28 12:31
  * @version V1.0
+ * @since 2017/10/28 12:31
  */
 @Command(name = "autoet", description = "auto test es")
 public class Autoet {
     @Inject
     public HelpOption helpOption;
 
-    @Option(name = {"--port"}, required = true, description = "port")
+    @Option(name = {"--port"}, description = "port")
     public int port = 9200;
 
     @Option(name = {"--host"}, description = "host")
@@ -44,9 +45,11 @@ public class Autoet {
 
     public void run() {
         Config config = new Config();
-        String tracksDir = config.getTracksDir();
+        trackFile = config.getTrackFile();
+        reportFile = config.getReportFile();
 
-        if (Strings.isNullOrEmpty(trackFile)){
+        String tracksDir = config.getTracksDir();
+        if (Strings.isNullOrEmpty(trackFile)) {
             trackFile = tracksDir + File.separator + trackFile;
         }
 
@@ -59,5 +62,21 @@ public class Autoet {
         csvReport.wiriteCsv(resultMap, reportFile);
         LOG.info("run complete");
         esServer.close();
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getReportFile() {
+        return reportFile;
+    }
+
+    public String getTrackFile() {
+        return trackFile;
     }
 }

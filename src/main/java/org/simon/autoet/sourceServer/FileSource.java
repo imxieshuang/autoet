@@ -12,9 +12,10 @@ import org.simon.autoet.trackServer.Result;
 
 /**
  * 读取文件导入es
+ *
  * @author simon
- * @since 2017/10/28 12:42
  * @version V1.0
+ * @since 2017/10/28 12:42
  */
 public class FileSource implements DataSource {
     private EsServer esServer;
@@ -54,17 +55,17 @@ public class FileSource implements DataSource {
                 String temp = head + line + "\n";
                 source.append(temp);
                 increaseBulk++;
-                if (increaseBulk == bulkSize) {
+
+                if (increaseBulk % bulkSize == 0) {
                     result.avg(esServer.indexBulk(source.toString()));
                     source = new StringBuilder();
-                    increaseBulk = 1;
+                    LOG.info("insert elasticsearch document count: " + increaseBulk);
                 }
             }
 
             result.avg(esServer.indexBulk(source.toString()));
+            LOG.info("insert elasticsearch document count: " + increaseBulk);
             source = new StringBuilder();
-            increaseBulk = 1;
-
         } catch (Exception e) {
             LOG.error(e.getMessage());
         } finally {

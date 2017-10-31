@@ -11,9 +11,10 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * 配置类
+ *
  * @author simon
- * @since  2017/10/28 12:28
  * @version V1.0
+ * @since 2017/10/28 12:28
  */
 public class Config {
     //auto.data=data
@@ -23,6 +24,8 @@ public class Config {
     private String logDir;
     private String tracksDir;
     private String mappingsDir;
+    private String trackFile;
+    private String reportFile;
     private static final Log LOG = LogFactory.getLog(Config.class);
 
     public Config() {
@@ -37,6 +40,8 @@ public class Config {
             this.logDir = userDir + File.separator + properties.getProperty("auto.log");
             this.tracksDir = userDir + File.separator + properties.getProperty("auto.tracks");
             this.mappingsDir = userDir + File.separator + properties.getProperty("auto.mappings");
+            this.trackFile = userDir + File.separator + this.tracksDir + File.separator + "track.json";
+            this.reportFile = userDir + File.separator + "report.csv";
         } catch (IOException e) {
             LOG.error(e.getMessage());
         } finally {
@@ -48,6 +53,14 @@ public class Config {
                 }
             }
         }
+    }
+
+    public String getReportFile() {
+        return reportFile;
+    }
+
+    public String getTrackFile() {
+        return trackFile;
     }
 
     public String getMappingsDir() {

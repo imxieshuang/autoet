@@ -57,7 +57,7 @@ public class EsServerImpl implements EsServer {
             String responseStr = EntityUtils.toString(response.getEntity());
 
             Result result = ParseJsonUtil.parseIndex(responseStr);
-            LOG.info("index complete");
+
             return result;
         } catch (IOException e) {
             LOG.error(e.getMessage());

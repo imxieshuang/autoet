@@ -1,11 +1,11 @@
 package org.simon.autoet.trackServer;
 
 /**
-
  * 测试结果实体类
+ *
  * @author simon
- * @since 2017/10/28 12:27
  * @version V1.0
+ * @since 2017/10/28 12:27
  */
 public class Result {
 
@@ -27,11 +27,13 @@ public class Result {
     }
 
     public Result avg(Result result) {
-        this.took = result.getTook() + this.getTook();
-        this.total = result.getTotal() + this.getTotal();
-        this.error = result.getError() + this.getError();
-        this.throughout = (result.getThroughout() + this.getThroughout()) / 2;
-        this.errorRate = (result.getErrorRate() + this.getErrorRate()) / 2;
+        if (result != null) {
+            this.took = result.getTook() + this.getTook();
+            this.total = result.getTotal() + this.getTotal();
+            this.error = result.getError() + this.getError();
+            this.throughout = (result.getThroughout() + this.getThroughout()) / 2;
+            this.errorRate = (result.getErrorRate() + this.getErrorRate()) / 2;
+        }
         return this;
     }
 
