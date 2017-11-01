@@ -1,8 +1,8 @@
 package org.simon.autoet.client;
 
 import io.airlift.airline.SingleCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 程序运行入口类
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @since 2017/10/28 12:28
  */
 public class Client {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
+    private static final Logger LOGGER = LogManager.getLogger(Client.class);
 
     private Client() {
     }

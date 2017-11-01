@@ -1,17 +1,18 @@
 package org.simon.autoet;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.simon.autoet.elasticsearch.EsServerImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * Created by Administrator on 2017/10/26.
  */
 public class ESServerTest {
     private EsServerImpl server;
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(EsServerImpl.class);
 
     @Before
     public void clientTest(){

@@ -11,12 +11,12 @@ import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.simon.autoet.track.Result;
 import org.simon.autoet.util.ParseJsonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * es服务接口类
@@ -31,7 +31,7 @@ public class EsServerImpl implements EsServer {
     private int port;
     private RestClient client;
     private List<String> createIndices = new ArrayList<>();
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(EsServerImpl.class);
 
     public EsServerImpl(String hostName, int port) {
         this.hostName = hostName;

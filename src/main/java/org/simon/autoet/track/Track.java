@@ -38,7 +38,6 @@ public class Track {
         }
 
         JSONObject jsonTrack = JSON.parseObject(this.trackStr);
-
         JSONArray indicesArray = jsonTrack.getJSONArray("indices");
         parseIndice(indicesArray);
 
@@ -59,8 +58,9 @@ public class Track {
             String type = jsonIndice.getString("type");
             String mapping = jsonIndice.getString("mapping");
             String documents = jsonIndice.getString("documents");
+            Integer bulkSize = jsonIndice.getInteger("bulk-size");
 
-            indices.add(new Indice(index, type, mapping, documents));
+            indices.add(new Indice(index, type, mapping, documents, bulkSize));
         }
     }
 
@@ -89,9 +89,10 @@ public class Track {
 
         String name = jsonChallenges.getString("name");
         JSONArray scheduleArray = jsonChallenges.getJSONArray("schedule");
+        Boolean autoManaged = jsonChallenges.getBoolean("auto-managed");
 
         ArrayList<Schedule> schedules = new ArrayList<>();
-        this.challenge = new Challenge(name, schedules);
+        this.challenge = new Challenge(name, schedules,autoManaged);
 
         for (Object scheduleObj : scheduleArray) {
             JSONObject jsonSchedule = (JSONObject) scheduleObj;
@@ -103,6 +104,7 @@ public class Track {
 
 
     }
+
 
     public String getTrackStr() {
         return trackStr;

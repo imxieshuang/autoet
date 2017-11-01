@@ -6,8 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * 文件合并测试
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * @since 2017/10/31 11:57
  */
 public class FileUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
+    private static final Logger LOGGER = LogManager.getLogger(FileUtil.class);
 
     private FileUtil() {
     }

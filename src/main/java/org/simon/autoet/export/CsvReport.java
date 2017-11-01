@@ -4,9 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.simon.autoet.track.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 以csv格式输出结果
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * @since 2017/10/28 12:34
  */
 public class CsvReport implements Report {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsvReport.class);
+    private static final Logger LOGGER = LogManager.getLogger(CsvReport.class);
 
     public void wiriteCsv(Map<String, Result> resultMap, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {

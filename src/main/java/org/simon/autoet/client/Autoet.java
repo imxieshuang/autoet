@@ -7,6 +7,8 @@ import io.airlift.airline.Option;
 import java.io.File;
 import java.util.Map;
 import javax.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.simon.autoet.config.Config;
 import org.simon.autoet.elasticsearch.EsServer;
 import org.simon.autoet.elasticsearch.EsServerImpl;
@@ -14,8 +16,6 @@ import org.simon.autoet.export.CsvReport;
 import org.simon.autoet.track.Driver;
 import org.simon.autoet.track.Result;
 import org.simon.autoet.track.Track;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 命令行定义
@@ -41,12 +41,17 @@ public class Autoet {
     @Option(name = {"--track-file"}, description = "report file")
     public String trackFile;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EsServerImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(EsServerImpl.class);
 
     public void run() {
         Config config = new Config();
-        trackFile = config.getTrackFile();
-        reportFile = config.getReportFile();
+        if (trackFile == null) {
+            trackFile = config.getTrackFile();
+        }
+
+        if (reportFile == null) {
+            reportFile = config.getReportFile();
+        }
 
         String tracksDir = config.getTracksDir();
         if (Strings.isNullOrEmpty(trackFile)) {

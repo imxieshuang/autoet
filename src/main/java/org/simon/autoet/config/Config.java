@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 配置类
@@ -26,7 +26,7 @@ public class Config {
     private String mappingsDir;
     private String trackFile;
     private String reportFile;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
+    private static final Logger LOGGER = LogManager.getLogger(Config.class);
 
 
     public Config() {
@@ -39,7 +39,7 @@ public class Config {
             this.logDir = userDir + File.separator + properties.getProperty("auto.log");
             this.tracksDir = userDir + File.separator + properties.getProperty("auto.tracks");
             this.mappingsDir = userDir + File.separator + properties.getProperty("auto.mappings");
-            this.trackFile = userDir + File.separator + this.tracksDir + File.separator + "track.json";
+            this.trackFile = this.tracksDir + File.separator + "track.json";
             this.reportFile = userDir + File.separator + "report.csv";
         } catch (IOException e) {
             LOGGER.error("load properties failed", e);

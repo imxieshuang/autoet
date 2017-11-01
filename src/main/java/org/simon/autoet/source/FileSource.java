@@ -1,14 +1,22 @@
 package org.simon.autoet.source;
 
+import com.google.common.base.Strings;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.simon.autoet.elasticsearch.EsServer;
 import org.simon.autoet.track.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * 读取文件导入es
@@ -19,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FileSource implements DataSource {
     private EsServer esServer;
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileSource.class);
+    private static final Logger LOGGER = LogManager.getLogger(FileSource.class);
 
     public FileSource(EsServer esServer) {
         this.esServer = esServer;
@@ -33,9 +41,45 @@ public class FileSource implements DataSource {
         boolean compressedFilename = BZip2Utils.isCompressedFilename(fileName);
         if (compressedFilename) {
             String uncompressedFileName = BZip2Utils.getUncompressedFilename(fileName);
+            if (!Files.exists(Paths.get(uncompressedFileName))) {
+                decompressBzip2(fileName, uncompressedFileName);
+            }
             return readData(uncompressedFileName);
         }
         return readData(fileName);
+    }
+
+    private void decompressBzip2(String compressFileName, String unCompressFileName) {
+        OutputStream out = null;
+        BZip2CompressorInputStream bzin = null;
+        try {
+            InputStream fin = Files.newInputStream(Paths.get(compressFileName));
+            BufferedInputStream in = new BufferedInputStream(fin);
+            out = Files.newOutputStream(Paths.get(unCompressFileName));
+            bzin = new BZip2CompressorInputStream(in);
+            final byte[] buffer = new byte[1024];
+            int n = 0;
+            while (-1 != (n = bzin.read(buffer))) {
+                out.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+            LOGGER.error("compress bzip2 file failed: " + compressFileName, e);
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    LOGGER.error("close write uncompress file failed: " + unCompressFileName, e);
+                }
+            }
+            if (bzin != null) {
+                try {
+                    bzin.close();
+                } catch (IOException e) {
+                    LOGGER.error("close read compress file failed: " + compressFileName, e);
+                }
+            }
+        }
     }
 
     @Override
@@ -46,7 +90,7 @@ public class FileSource implements DataSource {
 
             String line;
             StringBuilder source = new StringBuilder();
-            int increaseBulk = 1;
+            int increaseBulk = 0;
             while ((line = reader.readLine()) != null) {
                 String temp = head + line + "\n";
                 source.append(temp);
@@ -58,8 +102,12 @@ public class FileSource implements DataSource {
                     LOGGER.info("insert elasticsearch document count: " + increaseBulk);
                 }
             }
-            result.avg(esServer.indexBulk(source.toString()));
-            LOGGER.info("insert elasticsearch document count: " + increaseBulk);
+
+            if (!Strings.isNullOrEmpty(source.toString())) {
+                result.avg(esServer.indexBulk(source.toString()));
+                LOGGER.info("insert elasticsearch document count: " + increaseBulk);
+
+            }
         } catch (Exception e) {
             LOGGER.error("insert document failed", e);
         }

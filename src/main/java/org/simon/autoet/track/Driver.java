@@ -5,14 +5,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.simon.autoet.config.Config;
 import org.simon.autoet.elasticsearch.EsServer;
 import org.simon.autoet.exception.AutoRuntimeException;
 import org.simon.autoet.source.DataSource;
 import org.simon.autoet.source.FileSource;
 import org.simon.autoet.util.ParseJsonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * 用于执行挑战
@@ -25,7 +26,7 @@ public class Driver {
     private Track track;
     private EsServer esServer;
     private Config config;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Driver.class);
+    private static final Logger LOGGER = LogManager.getLogger(Driver.class);
 
 
     public Driver(Track track, EsServer esServer, Config config) {
@@ -46,7 +47,9 @@ public class Driver {
         runIndices(indices, fileSource);
 
         Map<String, Result> resultMap = runChallenge(operationMap, schedules, fileSource);
-        deleteIndex();
+        if (challenge.getAutoManaged()) {
+            deleteIndex();
+        }
 
         LOGGER.info("track complete " + trackName);
         return resultMap;
@@ -100,7 +103,7 @@ public class Driver {
             }
 
             if (esServer.createIndex(indice.getIndex(), mapping)) {
-                fileSource.insertEs(indice.getIndex(), indice.getType(), 2000, documentFile);
+                fileSource.insertEs(indice.getIndex(), indice.getType(), indice.getBulkSize(), documentFile);
             } else {
                 throw new AutoRuntimeException("create index failed: " + indice.getIndex());
             }
