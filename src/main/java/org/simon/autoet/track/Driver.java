@@ -62,7 +62,10 @@ public class Driver {
             if (OperationType.SEARCH.equals(operation.getOperationType())) {
                 Result result = esServer.query(operation.getIndex(), operation.getType(), operation.getBody());
                 for (int i = 0; i < schedule.getIterations() - 1; i++) {
-                    result.avg(esServer.query(operation.getIndex(), operation.getType(), operation.getBody()));
+                    Result targetResult = esServer.query(operation.getIndex(), operation.getType(), operation.getBody());
+                    result.avg(targetResult);
+                    result.minResult(targetResult);
+                    result.maxResult(targetResult);
                 }
                 LOGGER.info("operation complete " + operation.getName());
                 resultMap.put(operation.getName(), result);

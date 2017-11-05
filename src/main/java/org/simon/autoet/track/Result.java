@@ -13,6 +13,8 @@ public class Result {
     private long total;
     private long error;
     private double throughout;
+    private double minThroughout;
+    private double maxThroughout;
     private double errorRate;
 
     public Result() {
@@ -36,6 +38,28 @@ public class Result {
             this.errorRate = (result.getErrorRate() + this.getErrorRate()) / 2;
         }
         return this;
+    }
+
+    public Result minResult(Result result){
+        if (this.getThroughout()>result.getThroughout()){
+            this.minThroughout=result.getThroughout();
+        }
+        return this;
+    }
+
+    public Result maxResult(Result result){
+        if (this.getThroughout()<result.getThroughout()){
+            this.maxThroughout=result.getThroughout();
+        }
+        return this;
+    }
+
+    public double getMinThroughout() {
+        return minThroughout;
+    }
+
+    public double getMaxThroughout() {
+        return maxThroughout;
     }
 
     public long getTook() {

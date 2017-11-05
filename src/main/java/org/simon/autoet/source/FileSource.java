@@ -97,14 +97,20 @@ public class FileSource implements DataSource {
                 increaseBulk++;
 
                 if (increaseBulk % bulkSize == 0) {
-                    result.avg(esServer.indexBulk(source.toString()));
+                    Result targetResult = esServer.indexBulk(source.toString());
+                    result.avg(targetResult);
+                    result.minResult(targetResult);
+                    result.maxResult(targetResult);
                     source = new StringBuilder();
                     LOGGER.info("insert elasticsearch document count: " + increaseBulk);
                 }
             }
 
             if (!Strings.isNullOrEmpty(source.toString())) {
-                result.avg(esServer.indexBulk(source.toString()));
+                Result targetResult = esServer.indexBulk(source.toString());
+                result.avg(targetResult);
+                result.minResult(targetResult);
+                result.maxResult(targetResult);
                 LOGGER.info("insert elasticsearch document count: " + increaseBulk);
 
             }

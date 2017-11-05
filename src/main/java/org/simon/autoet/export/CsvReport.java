@@ -24,9 +24,13 @@ public class CsvReport implements Report {
                 String operationName = resultEntry.getKey();
                 Result result = resultEntry.getValue();
                 double throughout = result.getThroughout();
+                double minThroughout = result.getMinThroughout();
+                double maxThroughout = result.getMaxThroughout();
                 long took = result.getTook();
                 double errorRate = result.getErrorRate();
-                String lines = "Throughput," + operationName + "," + throughout + "ops/s" + "\n" +
+                String lines = "Min throughput," + operationName + "," + minThroughout + "s/ops" + "\n" +
+                        "Median throughput," + operationName + "," + throughout + "s/ops" + "\n" +
+                        "Max throughput," + operationName + "," + maxThroughout + "s/ops" + "\n" +
                         "consume time," + operationName + "," + took + "ms" + "\n" +
                         "error rate," + operationName + "," + errorRate + "%" + "\n";
                 writer.append(lines);
