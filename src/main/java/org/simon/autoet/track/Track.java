@@ -59,6 +59,9 @@ public class Track {
             String mapping = jsonIndice.getString("mapping");
             String documents = jsonIndice.getString("documents");
             Integer bulkSize = jsonIndice.getInteger("bulk-size");
+            if (null == bulkSize) {
+                bulkSize = 1000;
+            }
 
             indices.add(new Indice(index, type, mapping, documents, bulkSize));
         }
@@ -76,11 +79,14 @@ public class Track {
                 String body = jsonOperation.getString("body");
                 operationMap.put(name, new Operation(name, operationType, index, type, body));
             } else if ("index".equals(operationType)) {
-                String bulkSize = jsonOperation.getString("bulk-size");
+                Integer bulkSize = jsonOperation.getInteger("bulk-size");
+                if (null == bulkSize) {
+                    bulkSize = 1000;
+                }
                 String documents = jsonOperation.getString("documents");
                 String mapping = jsonOperation.getString("mapping");
                 operationMap.put(name, new Operation(name, operationType, index, type,
-                        mapping, documents, Integer.parseInt(bulkSize)));
+                        mapping, documents, bulkSize));
             }
         }
     }
@@ -90,9 +96,12 @@ public class Track {
         String name = jsonChallenges.getString("name");
         JSONArray scheduleArray = jsonChallenges.getJSONArray("schedule");
         Boolean autoManaged = jsonChallenges.getBoolean("auto-managed");
+        if (null == autoManaged) {
+            autoManaged = false;
+        }
 
         ArrayList<Schedule> schedules = new ArrayList<>();
-        this.challenge = new Challenge(name, schedules,autoManaged);
+        this.challenge = new Challenge(name, schedules, autoManaged);
 
         for (Object scheduleObj : scheduleArray) {
             JSONObject jsonSchedule = (JSONObject) scheduleObj;

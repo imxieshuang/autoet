@@ -16,6 +16,7 @@ public class Result {
     private double minThroughout;
     private double maxThroughout;
     private double errorRate;
+    private String type;
 
     public Result() {
         //    需要默认构造函数
@@ -60,6 +61,14 @@ public class Result {
 
     public double getMaxThroughout() {
         return maxThroughout;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public long getTook() {

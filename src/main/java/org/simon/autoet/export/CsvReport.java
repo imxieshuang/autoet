@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.simon.autoet.track.OperationType;
 import org.simon.autoet.track.Result;
 
 /**
@@ -28,9 +29,13 @@ public class CsvReport implements Report {
                 double maxThroughout = result.getMaxThroughout();
                 long took = result.getTook();
                 double errorRate = result.getErrorRate();
-                String lines = "Min throughput," + operationName + "," + minThroughout + "s/ops" + "\n" +
-                        "Median throughput," + operationName + "," + throughout + "s/ops" + "\n" +
-                        "Max throughput," + operationName + "," + maxThroughout + "s/ops" + "\n" +
+                String unit = "s/ops";
+                if (result.getType() != null && OperationType.INDEX.equals(result.getType())) {
+                    unit = "doc/s";
+                }
+                String lines = "Min throughput," + operationName + "," + minThroughout + unit + "\n" +
+                        "Median throughput," + operationName + "," + throughout + unit + "\n" +
+                        "Max throughput," + operationName + "," + maxThroughout + unit + "\n" +
                         "consume time," + operationName + "," + took + "ms" + "\n" +
                         "error rate," + operationName + "," + errorRate + "%" + "\n";
                 writer.append(lines);

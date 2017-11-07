@@ -61,6 +61,7 @@ public class Driver {
             Operation operation = operationMap.get(schedule.getOperation());
             if (OperationType.SEARCH.equals(operation.getOperationType())) {
                 Result result = esServer.query(operation.getIndex(), operation.getType(), operation.getBody());
+                result.setType(OperationType.SEARCH);
                 for (int i = 0; i < schedule.getIterations() - 1; i++) {
                     Result targetResult = esServer.query(operation.getIndex(), operation.getType(), operation.getBody());
                     result.avg(targetResult);
@@ -83,6 +84,7 @@ public class Driver {
                 if (esServer.createIndex(operation.getIndex(), mapping)) {
                     Result result = fileSource.insertEs(operation.getIndex(),
                             operation.getType(), operation.getBulkSize(), documentFile);
+                    result.setType(OperationType.INDEX);
                     resultMap.put(operation.getName(), result);
                 } else {
                     throw new AutoRuntimeException("create index failed: " + operation.getIndex());

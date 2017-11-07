@@ -24,12 +24,9 @@
 hs_err_pid*
 
 .gitignore
-.idea/checkstyle-idea.xml
-.idea/compiler.xml
-.idea/encodings.xml
-.idea/libraries/
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
+.idea
 autoet.iml
 target/
+
+.idea/inspectionProfiles/
+log/
